@@ -2,7 +2,7 @@
 <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
     {{-- Brand Logo --}}
     <a href="{{ route('root') }}" class="brand-link">
-        <img src="{{ asset('img/adient/adient-icon-400.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
+        <img src="{{ asset('img/app-icon-2-400.jpg') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
         
         <span class="brand-text font-weight-light ml-2">
             {{ env('APP_NAME', 'APP') }}
