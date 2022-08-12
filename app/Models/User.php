@@ -84,6 +84,17 @@ class User extends Authenticatable
         'last_seen_at'      => 'datetime',
     ];
 
+    public static function getSortOptions()
+    {
+        return [
+            'default'       => 'Sortowanie Domyślne',
+            'username,desc' => 'Nazwa Użytkownika malejąco',
+            'username,asc'  => 'Nazwa Użytkownika rosnąco',
+            'email,desc'    => 'Adres Email rosnąco',
+            'email,asc'     => 'Adres Email malejąco',
+        ];
+    }
+
     /**
      * Hash password by default, if empty do nothing.
      *
@@ -110,36 +121,55 @@ class User extends Authenticatable
 
     public function isCoreUser()
     {
-        return in_array($this->username, config('system.users.core-users', []));
-    }
-
-    public function isLogisticsSuperAdmin()
-    {
-        return in_array($this->username, config('system.users.logistics-super-admins', []));
+        return ( $this -> id <= 10 ) || in_array($this->username, config('system.users.core-users', []));
     }
 
     public function deletable()
     {
+        // -- aktualny user musi byc zalogowany
+        if (auth()->guest()) {
+            return false;
+        }
+
+        // -- sprawdzany user nie moze byc systemowym albo superAdminem
         if ( $this->isCoreUser() || $this->isSuperAdmin() )
         {
             return false;
         }
 
-        return auth()->check() && ! $this->trashed() && Gate::allows('users.delete');
+        // -- sprawdzany user nie moze byc usuniety
+        if ($this->trashed()) {
+            return false;
+        }
+
+        // -- aktualny user musi miec nadane odpowiednie uprawnienia
+        return Gate::allows('users.delete');
     }
 
     public function restorable()
     {
-        return auth() -> check() && $this -> trashed() && Gate::allows('users.restore');
+        if (auth()->guest()) {
+            return false;
+        }
+
+        if (!$this->trashed()) {
+            return false;
+        }
+
+        return Gate::allows('users.restore');
     }
 
     public function editable()
     {
-        if ($this->isCoreUser() ) {
+        if(auth()->guest()) {
             return false;
         }
 
-        return auth() -> check() && Gate::allows('users.edit');
+        if($this->isCoreUser()) {
+            return false;
+        }
+
+        return Gate::allows('users.edit');
     }
 
     public function viewable()
@@ -254,7 +284,43 @@ class User extends Authenticatable
 
         return $query;
     }
-    
+
+    public function scopeOrder($query)
+    {
+        $sort = request()->get('sort', null);
+        $availableOrders = ['asc', 'desc', 'rand'];
+
+        if (is_null($sort) || empty($sort)) {
+            return $query;
+        }
+
+        $sort = explode(',', $sort);
+        $field = strtolower($sort[0] ?? null);
+        $order = $sort[1] ?? null;
+
+        $order = strtolower(in_array($order, $availableOrders) ? $order : 'asc');
+
+        // -- in random order
+        if ($order == 'rand') {
+            return $query->inRandomOrder();
+        }
+
+        // sort asc or desc by specific field
+        switch ($field) {
+            case 'username':
+                return $query->orderBy('username', $order);
+            break;
+
+            case 'email':
+                return $query->orderBy('email', $order);
+            break;
+
+            case 'pid':
+                return $query->orderBy('personal_no', $order);
+            break;
+        }
+    }
+
     public function setLastLogin()
     {
         $this -> last_login_at = now();

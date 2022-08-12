@@ -1,0 +1,31 @@
+.selecting-left td.right,
+.selecting-left td.right *,
+.selecting-left th.right,
+.selecting-left th.right *,
+.selecting-right td.left,
+.selecting-right td.left *,
+.selecting-right th.left,
+.selecting-right th.left * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.selecting-left td.right::selection,
+.selecting-left td.right *::selection,
+.selecting-left th.right::selection,
+.selecting-left th.right *::selection,
+.selecting-right td.left::selection,
+.selecting-right td.left *::selection,
+.selecting-right th.left::selection,
+.selecting-right th.left *::selection {
+    background: transparent;
+}
+
+#copied-text {
+    font-family: monospace;
+    white-space: pre;
+}

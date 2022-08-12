@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Gate;
 use App\Models\NullModel;
 
 use App\Models\Permission;
-use Illuminate\Http\Request;
 use App\Models\PermissionGroup;
 
+use App\Actions\Users\PermissionDelete;
+use App\Actions\Users\PermissionUpdate;
 use App\Http\Requests\PermissionSaveRequest;
-use Symfony\Component\HttpFoundation\Response;
-
 use App\Http\Requests\PermissionBulkDestroyRequest;
 use App\Http\Requests\PermissionBulkRestoreRequest;
 
@@ -21,11 +19,11 @@ class PermissionsController extends Controller
     {
         self::checkAccess(__FUNCTION__);
 
-        return view('layouts.module-index', [
-            'models'    => Permission::with('group')
-                            ->filter()
-                            ->paginate( session()->get('itemsPerIndexPage', $this -> paginate_size) ),
+        return view('permissions.index', [
+            'models'    => Permission::with('group') -> filter() -> order()
+                            -> paginate( session()->get('itemsPerIndexPage', $this -> paginate_size) ),
             'groups'     => PermissionGroup::forSelect(),
+            'sortOptions'   => Permission::getSortOptions(),
         ]);
     }
 
@@ -33,11 +31,11 @@ class PermissionsController extends Controller
     {
         self::checkAccess(__FUNCTION__);
 
-        return view('layouts.module-index', [
-            'models'   => Permission::with('group')
+        return view('permissions.index', [
+            'models'   => Permission::with('group') -> filter() -> order()
                             ->onlyTrashed()
-                            ->filter()
                             ->paginate( session()->get('itemsPerIndexPage', $this -> paginate_size) ),
+            'sortOptions'   => Permission::getSortOptions(),
         ]);
     }
 
@@ -77,8 +75,7 @@ class PermissionsController extends Controller
     {
         self::checkAccess(__FUNCTION__);
 
-        $permission -> update( $request->all() );
-        Permission::forgetForSelect();
+        PermissionUpdate::run($permission, $request);
 
         return redirect()->route( controllerRoute('show'), [$permission->id] );
     }
@@ -89,6 +86,7 @@ class PermissionsController extends Controller
 
         return view('layouts.module-show', [
             'model'         => $permission,
+            'groups'   => PermissionGroup::all()->pluck('name', 'id'),
             'action'        => 'show',
         ]);
     }
@@ -97,10 +95,9 @@ class PermissionsController extends Controller
     {
         self::checkAccess(__FUNCTION__);
 
-        $deleted = $permission->delete();
-        Permission::forgetForSelect();
+        PermissionDelete::run($permission);
 
-        return redirect() -> back() -> with('message', 'deleted successfully');
+        return redirect() -> back();
     }
 
     public function bulkDestroy(PermissionBulkDestroyRequest $request)
@@ -110,8 +107,7 @@ class PermissionsController extends Controller
         Permission::whereIn('id', request('bulkIds')) -> delete();
         Permission::forgetForSelect();
 
-        return redirect()->back(); // back();
-        // return response(null, Response::HTTP_NO_CONTENT);
+        return redirect()->back();
     }
 
     public function restore($id)

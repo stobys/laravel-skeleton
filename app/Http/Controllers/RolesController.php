@@ -7,8 +7,11 @@ use App\Models\NullModel;
 
 use App\Models\Permission;
 use Illuminate\Http\Request;
-use App\Http\Requests\RoleSaveRequest;
+use App\Actions\Users\RoleDelete;
 
+use App\Actions\Users\RoleUpdate;
+use App\Actions\Users\RoleRestore;
+use App\Http\Requests\RoleSaveRequest;
 use App\Http\Requests\RoleBulkDestroyRequest;
 use App\Http\Requests\RoleBulkRestoreRequest;
 use App\Http\Requests\RoleMassDestroyRequest;
@@ -24,8 +27,9 @@ class RolesController extends Controller
         // dd( cache()->get('spatie.permission.cache') );
         self::checkAccess(__FUNCTION__);
 
-        return view('layouts.module-index', [
-            'models'    => Role::with('permissions')->filter()->paginate( session()->get('itemsPerIndexPage', $this -> paginate_size) ),
+        return view('roles.index', [
+            'models'        => Role::with('permissions')->filter()->order()->paginate( session()->get('itemsPerIndexPage', $this -> paginate_size) ),
+            'sortOptions'   => Role::getSortOptions(),
         ]);
     }
 
@@ -33,8 +37,9 @@ class RolesController extends Controller
     {
         self::checkAccess(__FUNCTION__);
 
-        return view('layouts.module-index', [
-            'models'   => Role::with('permissions')->onlyTrashed()->filter()->paginate( session()->get('itemsPerIndexPage', $this -> paginate_size) ),
+        return view('roles.index', [
+            'models'        => Role::with('permissions')->onlyTrashed()->filter()->order()->paginate( session()->get('itemsPerIndexPage', $this -> paginate_size) ),
+            'sortOptions'   => Role::getSortOptions(),
         ]);
     }
 
@@ -77,11 +82,7 @@ class RolesController extends Controller
     {
         self::checkAccess(__FUNCTION__);
 
-        $role -> update($request->all());
-        $role -> syncPermissions( $request->input('permissions', []) );
-
-        // -- forget cache for select
-        Role::forgetForSelect();
+        RoleUpdate::run($role);
 
         return redirect()->route( controllerRoute('show'), [$role->id] );
     }
@@ -101,10 +102,7 @@ class RolesController extends Controller
     {
         self::checkAccess(__FUNCTION__);
 
-        $role -> delete();
-
-        // -- forget cache for select
-        Role::forgetForSelect();
+        RoleDelete::run($role);
 
         return redirect() -> back() -> with('message', 'deleted successfully');
     }
@@ -122,14 +120,11 @@ class RolesController extends Controller
         // return response(null, Response::HTTP_NO_CONTENT);
     }
 
-    public function restore($id)
+    public function restore(Role $role)
     {
         self::checkAccess(__FUNCTION__);
 
-        Role::onlyTrashed()->findOrFail($id)->restore();
-
-        // -- forget cache for select
-        Role::forgetForSelect();
+        RoleRestore::run($role);
 
         return redirect()->back(); // back();
     }

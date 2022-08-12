@@ -9,8 +9,11 @@ use App\Models\User;
 use App\Models\NullModel;
 use Illuminate\Support\Arr;
 
-use Illuminate\Filesystem\Filesystem;
+use App\Actions\Users\UserDelete;
 
+use App\Actions\Users\UserUpdate;
+use App\Actions\Users\UserRestore;
+use Illuminate\Filesystem\Filesystem;
 use App\Http\Requests\UserSaveRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UserBulkDestroyRequest;
@@ -23,16 +26,12 @@ class UsersController extends Controller
     {
         self::checkAccess(__FUNCTION__);
 
-        // return view('users.index', [
-        //     'models'        => User::with('roles')->filter() -> paginate( session() -> get('itemsPerIndexPage', $this -> paginate_size) ),
-        //     'selectedRoles' => session() -> get('filters.users.roles', []),
-        //     'roles'         => Role::forSelect(),
-        // ]);
-
-        return view('layouts.module-index', [
-            'models'        => User::with('roles') -> withoutInternal() -> filter() -> paginate( session() -> get('itemsPerIndexPage', $this -> paginate_size) ),
-            'selectedRoles' => session() -> get('filters.users.roles', []),
+        return view('users.index', [
+            'models'        => User::with('roles')->withoutInternal()->filter()->order()->paginate(session()->get('itemsPerIndexPage', $this->paginate_size)),
+            'selectedRoles' => session()->get('filters.users.roles', []),
             'roles'         => Role::forSelect(),
+
+            'sortOptions'   => User::getSortOptions(),
         ]);
     }
     
@@ -40,9 +39,12 @@ class UsersController extends Controller
     {
         self::checkAccess(__FUNCTION__);
 
-        return view('layouts.module-index', [
-            'models'    => User::with('roles') -> withoutInternal() -> onlyTrashed()->filter()->paginate( session()->get('itemsPerIndexPage', $this -> paginate_size) ),
+        return view('users.index', [
+            'models'    => User::with('roles') -> withoutInternal() -> onlyTrashed()->filter()->order()->paginate( session()->get('itemsPerIndexPage', $this -> paginate_size) ),
+            'selectedRoles' => session()->get('filters.users.roles', []),
             'roles'         => Role::forSelect(),
+
+            'sortOptions'   => User::getSortOptions(),
         ]);
     }
 
@@ -84,10 +86,7 @@ class UsersController extends Controller
     {
         self::checkAccess(__FUNCTION__);
 
-        $user -> update( $request->all() );
-        // $user -> changePassword( $request->get('password') );
-
-        $user -> roles() -> sync( $request->input('roles', []) );
+        UserUpdate::run($user);
 
         return redirect()->route( controllerRoute('show'), [$user->id] );
     }
@@ -116,9 +115,9 @@ class UsersController extends Controller
     {
         self::checkAccess(__FUNCTION__);
 
-        $user -> delete();
-
-        return redirect() -> back() -> with('message', 'deleted successfully');
+        UserDelete::run($user);
+        
+        return redirect() -> back();
     }
 
     public function bulkDestroy(UserBulkDestroyRequest $request)
@@ -127,15 +126,21 @@ class UsersController extends Controller
 
         User::whereIn('id', request('bulkIds')) -> delete();
 
-        return redirect() -> back();
+        if ($request->ajax()) {
+            return response()->json($request->all(), 200);
+        }
+        else {
+            return redirect() -> back();
+        }
+
         // return response(null, Response::HTTP_NO_CONTENT);
     }
 
-    public function restore($id)
+    public function restore(User $user)
     {
         self::checkAccess(__FUNCTION__);
 
-        User::onlyTrashed() -> findOrFail($id) -> restore();
+        UserRestore::run($user);
 
         return redirect() -> back();
     }
@@ -164,6 +169,11 @@ class UsersController extends Controller
     {
         $file = $user->avatar ?? 'default.jpg';
 
+        if ( $user->isCoreUser() )
+        {
+            $file = 'core.jpg';
+        }
+        
         // -- Check if the file exist
         if ( Storage::disk('avatars')->missing($file) ) {
             $file = 'default.jpg';

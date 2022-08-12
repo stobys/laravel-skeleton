@@ -53,8 +53,6 @@ mix.combine([
     'resources/js/scripts.js',
     // 'resources/js/vue.js',
 
-    'resources/js/production-planning.js',
-
     'resources/js/charts-utils.js',
     'resources/js/charts.js',
 ], 'public/js/scripts.js');

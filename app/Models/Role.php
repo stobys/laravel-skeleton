@@ -47,6 +47,15 @@ class Role extends SpatieRole
      */
     protected $messages = [];
 
+    public static function getSortOptions()
+    {
+        return [
+            'default'   => 'Sortowanie Domyślne',
+            'name,desc' => 'Nazwa malejąco',
+            'name,asc'  => 'Nazwa rosnąco',
+        ];
+    }
+
     // -- Validation rules
     protected function rules()
     {
@@ -131,5 +140,31 @@ class Role extends SpatieRole
         return $query;
     }
 
+    public function scopeOrder($query)
+    {
+        $sort = request()->get('sort', null);
+        $availableOrders = ['asc', 'desc', 'rand'];
 
+        if (is_null($sort) || empty($sort)) {
+            return $query;
+        }
+
+        $sort = explode(',', $sort);
+        $field = strtolower($sort[0] ?? null);
+        $order = $sort[1] ?? null;
+
+        $order = strtolower(in_array($order, $availableOrders) ? $order : 'asc');
+
+        // -- in random order
+        if ($order == 'rand') {
+            return $query->inRandomOrder();
+        }
+
+        // sort asc or desc by specific field
+        switch ($field) {
+            case 'name':
+                return $query->orderBy('name', $order);
+                break;
+        }
+    }
 }

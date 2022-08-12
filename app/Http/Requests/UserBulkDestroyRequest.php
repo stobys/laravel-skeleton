@@ -18,8 +18,8 @@ class UserBulkDestroyRequest extends FormRequest
     public function rules()
     {
         return [
-            'ids'   => 'required|array',
-            'ids.*' => 'exists:users,id',
+            'bulkIds'   => 'required|array',
+            'bulkIds.*' => 'exists:users,id',
         ];
     }
 }

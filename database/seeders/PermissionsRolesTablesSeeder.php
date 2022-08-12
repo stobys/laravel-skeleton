@@ -20,15 +20,9 @@ class PermissionsRolesTablesSeeder extends Seeder
     public function run()
     {
         $permissions = [
-            'permissions'   => ['access', 'index', 'trash', 'create', 'edit', 'show', 'delete', 'restore'],
-            'roles'         => ['access', 'index', 'trash', 'create', 'edit', 'show', 'delete', 'restore'],
-            'users'         => ['access', 'index', 'trash', 'create', 'edit', 'show', 'delete', 'restore'],
-            'projects'      => ['access', 'index', 'trash', 'create', 'edit', 'show', 'delete', 'restore'],
-            'materials'     => ['access', 'index', 'trash', 'create', 'edit', 'show', 'delete', 'restore'],
-            'inventories'   => ['access', 'index', 'trash', 'create', 'edit', 'show', 'delete', 'restore', 
-                                'scanning', 'booking', 'storno-scanning', 'storno-booking',
-                                'open', 'close'
-                            ],
+            'permissions'   => ['index', 'trash', 'create', 'edit', 'show', 'delete', 'restore'],
+            'roles'         => ['index', 'trash', 'create', 'edit', 'show', 'delete', 'restore'],
+            'users'         => ['index', 'trash', 'create', 'edit', 'show', 'delete', 'restore'],
         ];
 
         $groups = collect(array_keys($permissions)) -> mapWithKeys(function($group){
@@ -46,8 +40,8 @@ class PermissionsRolesTablesSeeder extends Seeder
                 $list[] = [
                     'name'          => $module .'.'. $name,
                     'group_id'      => $groups[$module] ?? null,
-                    'created_at'    => Carbon::now() -> subHour(),
-                    'updated_at'    => Carbon::now() -> subHour(),
+                    'created_at'    => Carbon::now(),
+                    'updated_at'    => Carbon::now(),
                 ];
             }
 
@@ -57,8 +51,8 @@ class PermissionsRolesTablesSeeder extends Seeder
         $roles = [
             'supervisor' => [
                     'name'      => 'supervisor',
-                    'created_at'    => Carbon::now() -> subHour(),
-                    'updated_at'    => Carbon::now() -> subHour(),
+                    'created_at'    => Carbon::now(),
+                    'updated_at'    => Carbon::now(),
                 ],
             'admin'  => [
                     'name'      => 'admin',

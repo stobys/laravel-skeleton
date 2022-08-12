@@ -1,12 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Models\Role;
+use App\Models\User;
 
-use App\Http\Controllers\{
-    PermissionsController,
-    RolesController,
-    UsersController
-};
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RolesController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\PermissionsController;
+
+Route::bind('user', function ($value) {
+    return User::withTrashed()->whereId($value)->firstOrFail();
+});
+
+Route::bind('role', function ($value) {
+    return Role::withTrashed()->whereId($value)->firstOrFail();
+});
 
 Route::group(['middleware' => ['auth']], function () {
 

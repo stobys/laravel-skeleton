@@ -4,11 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-use App\Models\Role;
+use App\Actions\Users\BatchUserLogin;
 use App\Models\User;
 
-use Carbon\Carbon;
-use Hash;
 
 class UsersTableSeeder extends Seeder
 {
@@ -22,62 +20,48 @@ class UsersTableSeeder extends Seeder
         // $this -> command -> info('Seeding: DatabaseSeeder!');
 
         $users = [
-            'admin' => [
-                    'username'      => 'admin',
-                    'password'      => 'Password', // $2y$10$tySIrWuYcOjZmQQ6WOERu.wk1JOmOIiQ5TboOs0eijrTA/nJ1DDzG',
-                    // 'password'       => '$2y$10$7EMc/1kS3h/LOzH9IkXakOzHi9EG1PCDhmO3ckYlZcIh8R2jnQ0WK', // -- admin
+            'batch' => [
+                    'username'      => 'batch',
+                    'password'      => '!',
 
-                    'email'         => 'admin@example.com',
+                    'email'         => 'batch@local.app',
+                    'family_name'   => 'BATCH',
+                    'given_name'    => 'Batch',
+
+                    'created_at'    => now() -> subHour(),
+                    'updated_at'    => now() -> subHour(),
+                ],
+            'supervisor' => [
+                    'username'      => 'supervisor',
+                    'password'      => 'Password', // $2y$10$tySIrWuYcOjZmQQ6WOERu.wk1JOmOIiQ5TboOs0eijrTA/nJ1DDzG',
+
+                    'email'         => 'supervisor@example.com',
                     'family_name'   => 'Almighty',
                     'given_name'    => 'Admin',
 
-                    'created_at'    => Carbon::now() -> subHour(),
-                    'updated_at'    => Carbon::now() -> subHour(),
+                    'created_at'    => now() -> subHour(),
+                    'updated_at'    => now() -> subHour(),
                 ],
-            'user'  => [
-                    'username'      => 'user',
-                    'password'      => 'Password', // $2y$10$tySIrWuYcOjZmQQ6WOERu.wk1JOmOIiQ5TboOs0eijrTA/nJ1DDzG',
+            'user' => [
+                'username'      => 'user',
+                'password'      => 'Password', // $2y$10$tySIrWuYcOjZmQQ6WOERu.wk1JOmOIiQ5TboOs0eijrTA/nJ1DDzG',
 
-                    'email'         => 'user@example.com',
-                    'family_name'   => 'Humble',
-                    'given_name'    => 'User',
+                'email'         => 'user@example.com',
+                'family_name'   => 'Simple',
+                'given_name'    => 'User',
 
-                    'created_at'    => Carbon::now(),
-                    'updated_at'    => Carbon::now(),
-                ],
-            'atobyss'  => [
-                    'username'      => 'atobyss',
-                    'password'      => 'Password', // $2y$10$tySIrWuYcOjZmQQ6WOERu.wk1JOmOIiQ5TboOs0eijrTA/nJ1DDzG',
+                'created_at'    => now(),
+                'updated_at'    => now(),
+            ],
 
-                    'email'         => 'atobys@adient.com',
-                    'family_name'   => 'Tobys',
-                    'given_name'    => 'Sławomir',
-
-                    'created_at'    => Carbon::now(),
-                    'updated_at'    => Carbon::now(),
-                ],
         ];
 
-        $admin = User::create($users['admin']);
-        $admin -> assignRole('supervisor');
-
-        User::create($users['user']);
+        User::create($users['batch']);
+        BatchUserLogin::run();
         
-        $atobyss = User::create($users['atobyss']);
-        $atobyss -> assignRole('admin');
+        $supervisor = User::create($users['supervisor']);
+        $supervisor -> assignRole('supervisor');
 
-
-        // $password = Hash::make('password');
-
-        // And now let's generate a few dozen users for our app:
-        // for ($i = 0; $i < 16; $i++) {
-        //     User::create([
-        //         'username'  => $faker -> username,
-        //         'password'      => '$2y$10$tySIrWuYcOjZmQQ6WOERu.wk1JOmOIiQ5TboOs0eijrTA/nJ1DDzG',
-
-        //         'family_name'   => $faker->name,
-        //         'given_name'    => $faker->name,
-        //     ]);
-        // }
+        User::create($users['user'] + ['id' => 11]);
     }
 }

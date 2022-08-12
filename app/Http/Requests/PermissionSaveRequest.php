@@ -12,7 +12,7 @@ class PermissionSaveRequest extends FormRequest
 {
     public const VALIDATION_RULES = [
         'name' => [
-            'unique:permissions',
+            'unique:auth_permissions',
             'required',
         ],
     ];
@@ -39,6 +39,9 @@ class PermissionSaveRequest extends FormRequest
     {
         $rules = self::VALIDATION_RULES;
 
+        $table = (new Permission)->table;
+        $model_id = $this->route('permission')->id ?? 0;
+
         switch( $this -> getMethod() )
         {
             // -- store action
@@ -48,7 +51,7 @@ class PermissionSaveRequest extends FormRequest
 
             // -- update action
             case 'PATCH':
-                $rules['name'][0] = 'unique:permissions,name,'. request()->route('permission')->id;
+                $rules['name'][0] = 'unique:'. $table .',name,'. $model_id;
             break;
         }
 

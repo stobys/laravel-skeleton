@@ -50,7 +50,6 @@ class UserSaveRequest extends FormRequest
                 'email',
             ],
             'roles'    => [
-                'required',
                 'array',
             ],
             'roles.*'  => [
