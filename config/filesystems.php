@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 return [
 
@@ -42,6 +42,11 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
+        ],
+
+        'avatars' => [
+            'driver' => 'local',
+            'root' => storage_path('app/avatars'),
         ],
 
         's3' => [
