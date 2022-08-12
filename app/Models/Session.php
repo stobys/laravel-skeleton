@@ -37,6 +37,17 @@ class Session extends Model
         return 'id';
     }
 
+    public static function getSortOptions()
+    {
+        return [
+            'default'   => 'Sortowanie Domyślne',
+            'user,desc' => 'Nazwa Użytkownika malejąco',
+            'user,asc'  => 'Nazwa Użytkownika rosnąco',
+            'ip,desc'   => 'Adres IP rosnąco',
+            'ip,asc'    => 'Adres IP malejąco',
+        ];
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -50,6 +61,27 @@ class Session extends Model
                 session()->put('filters.sessions.default_query_string', request()->get('default_query_string'));
             } else {
                 session()->forget('filters.sessions.default_query_string');
+            }
+
+            // -- check "username"
+            if (request()->has('username') && trim(request()->get('username')) !== '') {
+                session()->put('filters.sessions.username', request()->get('username'));
+            } else {
+                session()->forget('filters.sessions.username');
+            }
+
+            // -- check "ip_address"
+            if (request()->has('ip_address') && trim(request()->get('ip_address')) !== '') {
+                session()->put('filters.sessions.ip_address', request()->get('ip_address'));
+            } else {
+                session()->forget('filters.sessions.ip_address');
+            }
+
+            // -- check "user_agent"
+            if (request()->has('user_agent') && trim(request()->get('user_agent')) !== '') {
+                session()->put('filters.sessions.user_agent', request()->get('user_agent'));
+            } else {
+                session()->forget('filters.sessions.user_agent');
             }
         }
 
@@ -74,9 +106,63 @@ class Session extends Model
                             });
                         });
             });
-        });
+        })
+            -> when(session()->has('filters.sessions.username'), function($innerQuery){
+                $like = '%' . session()->get('filters.sessions.username') . '%';
+                $innerQuery->where('username', 'LIKE', $like);
+
+                session()->put('filters.sessions.isFiltered', true);
+            })
+            -> when(session()->has('filters.sessions.ip_address'), function($innerQuery){
+                $like = '%' . session()->get('filters.sessions.ip_address') . '%';
+                $innerQuery->where('ip_address', 'LIKE', $like);
+
+                session()->put('filters.sessions.isFiltered', true);
+            })
+            -> when(session()->has('filters.sessions.user_agent'), function($innerQuery){
+                $like = '%' . session()->get('filters.sessions.user_agent') . '%';
+                $innerQuery->where('user_agent', 'LIKE', $like);
+
+                session()->put('filters.sessions.isFiltered', true);
+            });
 
         return $query;
+    }
+
+    public function scopeOrder($query)
+    {
+        $sort = request()->get('sort', null);
+        $availableOrders = ['asc', 'desc', 'rand'];
+
+        if (is_null($sort) || empty($sort)) {
+            return $query;
+        }
+
+        $sort = explode(',', $sort);
+        $field = strtolower($sort[0] ?? null);
+        $order = $sort[1] ?? null;
+
+        $order = strtolower(in_array($order, $availableOrders) ? $order : 'asc');
+
+        // -- in random order
+        if ($order == 'rand') {
+            return $query->inRandomOrder();
+        }
+
+        // sort asc or desc by specific field
+        switch ($field) {
+            case 'ip':
+                return $query->orderBy('ip_address', $order);
+            break;
+
+            case 'user':
+                return $query->orderBy('user_id', $order);
+            break;
+
+            case 'act':
+                return $query->orderBy('last_activity', $order);
+            break;
+        }
     }
 
     public static function logoutOtherSessions()

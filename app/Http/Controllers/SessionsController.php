@@ -13,7 +13,8 @@ class SessionsController extends Controller
         abort_unless(auth()->check() && auth()->user()->isSuperAdmin(), 404);
 
         return view('sessions.index', [
-            'sessions'    => Session::filter()->orderBy('last_activity', 'desc')->get(),
+            'sessions'    => Session::filter()->order()->get(),
+            'sortOptions' => Session::getSortOptions(),
         ]);
     }
 
@@ -30,6 +31,6 @@ class SessionsController extends Controller
     {
         Session::whereIn('id', request('bulkIds'))->delete();
 
-        return redirect()->route('sessions.index'); // back();
+        return redirect()->route('sessions.index');
     }
 }

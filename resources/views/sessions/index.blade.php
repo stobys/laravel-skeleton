@@ -1,4 +1,4 @@
-<x-layout.app heading="Sessions">
+<x-layout.app heading="Sessions" x-data="alpineSessions">
     @section('content-header')
         <x-layout.content-header 
             heading="{{ __('Sesje Użytkowników') }}!"
@@ -9,10 +9,12 @@
         ></x-layout.content-header>
     @endsection
 
-@section('index-filter')
-    <x-layout.index-filter query="{{ session('filters.'. controllerName() .'.default_query_string') }}">
-        @includeIf('sessions._advanced-filter')
-    </x-layout.index-filter>
+    @section('index-filter')
+        <x-layout.index-filter advanced query="{{ session('filters.'. controllerName() .'.default_query_string') }}"
+            :sortOptions="$sortOptions"
+        >
+            @includeIf('sessions._advanced-filter')
+        </x-layout.index-filter>
     @endsection
     
     <x-layout.index-content :models="$sessions">
