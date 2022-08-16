@@ -2,7 +2,7 @@
 <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
     {{-- Brand Logo --}}
     <a href="{{ route('root') }}" class="brand-link">
-        <img src="{{ asset('img/app-icon-2-400.jpg') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
+        <img src="{{ asset('img/app-icon-2-400.jpg') }}" alt="Logo" class="brand-image img-circle elevation-3">
         
         <span class="brand-text font-weight-light ml-2">
             {{ env('APP_NAME', 'APP') }}
@@ -29,7 +29,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent text-sm" data-widget="treeview" role="menu" data-accordion="false">
                 @canany(['users.index', 'roles.index','permissions.index', 'projects.index', 'materials.index'])
-                <li class="nav-header">ZARZADZANIE</li>
+                <li class="nav-header">ZARZĄDZANIE</li>
                 @endcanany
                 @can('users.index')
                 <li class="nav-item">
