@@ -8,6 +8,7 @@
         "php": "^8.0.2",
         "directorytree/ldaprecord-laravel": "^2.6",
         "guzzlehttp/guzzle": "^7.2",
+        "innocenzi/laravel-vite": "0.2.*",
         "larabug/larabug": "^2.5",
         "laracasts/flash": "^3.2",
         "laracasts/utilities": "^3.2",
