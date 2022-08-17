@@ -1,0 +1,64 @@
+/**
+.column-selection .selecting-left td.right,
+.column-selection .selecting-left td.right *,
+.column-selection .selecting-left th.right,
+.column-selection .selecting-left th.right *,
+.column-selection .selecting-right td.left,
+.column-selection .selecting-right td.left *,
+.column-selection .selecting-right th.left,
+.column-selection .selecting-right th.left * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.column-selection .selecting-left td.right::selection,
+.column-selection .selecting-left td.right *::selection,
+.column-selection .selecting-left th.right::selection,
+.column-selection .selecting-left th.right *::selection,
+.column-selection .selecting-right td.left::selection,
+.column-selection .selecting-right td.left *::selection,
+.column-selection .selecting-right th.left::selection,
+.column-selection .selecting-right th.left *::selection {
+    background: transparent;
+}
+*/
+
+.selecting-storage-bin th:not(.storage-bin),    .selecting-storage-bin td:not(.storage-bin),
+.selecting-storage-unit th:not(.storage-unit),    .selecting-storage-unit td:not(.storage-unit),
+.selecting-voucher-id th:not(.voucher-id),      .selecting-voucher-id td:not(.voucher-id),
+.selecting-part-number th:not(.part-number),    .selecting-part-number td:not(.part-number),
+.selecting-part-quantity th:not(.part-quantity),    .selecting-part-quantity td:not(.part-quantity),
+.selecting-item-approval th:not(.item-approval),    .selecting-item-approval td:not(.item-approval)
+{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.selecting-storage-bin th:not(.storage-bin)::selection,     .selecting-storage-bin th:not(.storage-bin) *::selection,
+.selecting-storage-bin td:not(.storage-bin)::selection,     .selecting-storage-bin td:not(.storage-bin) *::selection,
+.selecting-storage-unit th:not(.storage-unit)::selection,   .selecting-storage-unit th:not(.storage-unit) *::selection,
+.selecting-storage-unit td:not(.storage-unit)::selection,   .selecting-storage-unit td:not(.storage-unit) *::selection,
+.selecting-voucher-id th:not(.voucher-id)::selection,       .selecting-voucher-id th:not(.voucher-id) *::selection,
+.selecting-voucher-id td:not(.voucher-id)::selection,       .selecting-voucher-id td:not(.voucher-id) *::selection,
+.selecting-part-number th:not(.part-number)::selection,     .selecting-part-number th:not(.part-number) *::selection,
+.selecting-part-number td:not(.part-number)::selection,     .selecting-part-number td:not(.part-number) *::selection,
+.selecting-part-quantity th:not(.part-quantity)::selection, .selecting-part-quantity th:not(.part-quantity) *::selection,
+.selecting-part-quantity td:not(.part-quantity)::selection, .selecting-item-approval td:not(.part-quantity) *::selection,
+.selecting-item-approval th:not(.item-approval)::selection, .selecting-item-approval th:not(.item-approval) *::selection,
+.selecting-item-approval td:not(.item-approval)::selection, .selecting-item-approval td:not(.item-approval) *::selection
+{
+    background: transparent;
+}
+
+#copied-text {
+    font-family: monospace;
+    white-space: pre;
+}

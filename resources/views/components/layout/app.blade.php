@@ -19,11 +19,9 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Styles -->
-    <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
+    
+    @vite()
     <link href="{{ asset('favicon.png') }}" rel="icon" type="image/png">
-
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,800,800i,900,900i"
-        rel="stylesheet">
 
     @yield('headerStyles')
     @yield('headerScripts')
@@ -76,8 +74,6 @@
     @if($livewire)
         @livewireScripts
     @endif
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/scripts.js') }}"></script>
 
     @yield('scripts')
 
@@ -147,7 +143,7 @@
     </script>
 
     <div id="loading-wrapper" style="display:none;">
-        <img id="loading-image" src="{{  asset('img/ajax-loader2.gif') }}" alt="Loading..." />
+        <img id="loading-image" src="{{  asset('img/ajax-loader.gif') }}" alt="Loading..." />
     </div>
 
 </body>

@@ -1,12 +1,28 @@
+// -- lodash
 import _ from 'lodash';
 window._ = _;
 
-/**
- * We'll load the axios HTTP library which allows us to easily issue requests
- * to our Laravel back-end. This library automatically handles sending the
- * CSRF token as a header based on the value of the "XSRF" token cookie.
- */
+// -- jQuery
+import jQuery from 'jquery';
+window.$ = window.jQuery = jQuery;
 
+// -- SweetAlert2
+import swal from 'sweetalert2';
+window.Swal = swal;
+
+// -- Toastr
+import toastr from '/node_modules/toastr/toastr.js';
+window.toastr = toastr;
+
+// -- Mustache
+import mustache from 'mustache';
+window.Mustache = mustache;
+
+// window.Popper = require('popper.js').default;
+// import popper from 'popper.js';
+// window.Popper = popper;
+
+// -- Axios
 import axios from 'axios';
 window.axios = axios;
 

@@ -24,6 +24,8 @@
         "moment": "^2.29.4",
         "mustache": "^4.2.0",
         "normalize.css": "^8.0.1",
+        "sass": "^1.54.4",
+        "sass-loader": "^13.0.2",
         "select2": "^4.1.0-rc.0",
         "sweetalert2": "^11.4.26",
         "toastr": "^2.1.4"

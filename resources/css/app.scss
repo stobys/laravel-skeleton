@@ -1,0 +1,21 @@
+// -- Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import '/node_modules/@fortawesome/fontawesome-free/css/all.min.css';
+
+
+@import url('https://necolas.github.io/normalize.css/latest/normalize.css');
+
+// -- Variables
+@import './variables';
+
+// -- Bootstrap and other packages/libraries
+@import '/node_modules/bootstrap/scss/bootstrap';
+@import '/node_modules/select2/dist/css/select2.min.css';
+@import '/node_modules/admin-lte/dist/css/adminlte.min.css';
+@import '/node_modules/toastr/build/toastr.min.css';
+
+// @import '/resources/repos/boostrap-datepicker/dist/css/bootstrap-datepicker.min.css';
+
+// -- additional styles
+@import '/resources/css/selecting-columns.css';
+@import './style';
