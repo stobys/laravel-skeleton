@@ -26,20 +26,8 @@ String.prototype.rpad = function(padString, length) {
     return str;
 }
 
-$.fn.filterByData = function (prop, val) {
-    var $self = this;
-    if (typeof val === 'undefined') {
-        return $self.filter(
-            function () { return typeof $(this).data(prop) !== 'undefined'; }
-        );
-    }
-    return $self.filter(
-        function () { return $(this).data(prop) == val; }
-    );
-};
-
-let slideDuration = 800;
-let slideUp = (target, duration = slideDuration) => {
+var slideDuration = 800;
+var slideUp = (target, duration = slideDuration) => {
     target.style.transitionProperty = 'height, margin, padding';
     target.style.transitionDuration = duration + 'ms';
     target.style.boxSizing = 'border-box';
@@ -65,7 +53,7 @@ let slideUp = (target, duration = slideDuration) => {
     }, duration);
 }
 
-let slideDown = (target, duration = slideDuration) => {
+var slideDown = (target, duration = slideDuration) => {
     target.style.removeProperty('display');
     let display = window.getComputedStyle(target).display;
 
@@ -97,7 +85,7 @@ let slideDown = (target, duration = slideDuration) => {
     }, duration);
 }
 
-let slideToggle = (target, duration = slideDuration) => {
+var slideToggle = (target, duration = slideDuration) => {
     if (window.getComputedStyle(target).display === 'none') {
         return slideDown(target, duration);
     } else {

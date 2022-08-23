@@ -1,129 +1,118 @@
+import common from './default.js'
+
 export default () => ({
-    init() {
-        console.log('Initialize Alpine on Users List');
-    },
+    ...common,
+    ...{
+        init() {
+            console.log('Initialize Alpine on Users List');
+        },
 
-    setSortOrder(event) {
-        let url = new URL(window.location);
-        let sort = $(event.target).val();
+        deleteModel(element) {
+            Swal.fire({
+                title: $(element).data('confirm') ?? 'O RLY ?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: $(element).data('confirm-text') ?? 'TAK',
+                denyButtonText: $(element).data('cancel-text') ?? 'NIE'
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $(element).closest('form').submit();
+                }
+            })
+        },
 
-        if (sort.toLowerCase() == 'default') {
-            url.searchParams.delete('sort');
-        }
-        else {
-            url.searchParams.set('sort', $(event.target).val());
-        }
+        restoreModel(element) {
+            Swal.fire({
+                title: $(element).data('confirm') ?? 'O RLY ?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: $(element).data('confirm-text') ?? 'TAK',
+                denyButtonText: $(element).data('cancel-text') ?? 'NIE'
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $(element).closest('form').submit();
+                }
+            })
+        },
 
-        window.location = url;
-    },
+        deleteSeletedModels(element) {
+            Swal.fire({
+                title: $(element).data('confirm') ?? 'O RLY ?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: $(element).data('confirm-text') ?? 'TAK',
+                denyButtonText: $(element).data('cancel-text') ?? 'NIE'
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    let selectedValues = $.map($('input:checkbox.rowSelectBox:checked'), (item) => $(item).val());
 
-    deleteModel(element) {
-        Swal.fire({
-            title: $(element).data('confirm') ?? 'O RLY ?',
-            showDenyButton: true,
-            showCancelButton: false,
-            confirmButtonText: $(element).data('confirm-text') ?? 'TAK',
-            denyButtonText: $(element).data('cancel-text') ?? 'NIE'
-        }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-                $(element).closest('form').submit();
-            }
-        })
-    },
+                    $.ajax({
+                        url: $(element).data('href'),
+                        type: 'DELETE',
+                        data: { bulkIds: selectedValues },
+                        success: function (result) {
+                            alert('OK');
+                        }
+                    });
+                }
+            })
+        },
 
-    restoreModel(element) {
-        Swal.fire({
-            title: $(element).data('confirm') ?? 'O RLY ?',
-            showDenyButton: true,
-            showCancelButton: false,
-            confirmButtonText: $(element).data('confirm-text') ?? 'TAK',
-            denyButtonText: $(element).data('cancel-text') ?? 'NIE'
-        }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-                $(element).closest('form').submit();
-            }
-        })
-    },
+        restoreSeletedModels(element) {
+            Swal.fire({
+                title: $(element).data('confirm') ?? 'O RLY ?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: $(element).data('confirm-text') ?? 'TAK',
+                denyButtonText: $(element).data('cancel-text') ?? 'NIE'
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    let selectedValues = $.map($('input:checkbox.rowSelectBox:checked'), (item) => $(item).val());
 
-    deleteSeletedModels(element) {
-        Swal.fire({
-            title: $(element).data('confirm') ?? 'O RLY ?',
-            showDenyButton: true,
-            showCancelButton: false,
-            confirmButtonText: $(element).data('confirm-text') ?? 'TAK',
-            denyButtonText: $(element).data('cancel-text') ?? 'NIE'
-        }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-                let selectedValues = $.map($('input:checkbox.rowSelectBox:checked'), (item) => $(item).val());
+                    $.ajax({
+                        url: $(element).data('href'),
+                        type: 'DELETE',
+                        data: { bulkIds: selectedValues },
+                        success: function (result) {
+                            alert('OK');
+                        }
+                    });
+                }
+            })
+        },
+        
+        // addItemRow(element) {
+        //     let template = document.getElementById('container-item-row-tmpl').innerHTML;
+        //     let rendered = Mustache.render(template, {
+        //         nextIndex: parseInt($('input[name^=index]:last').val())+1
+        //     });
 
-                $.ajax({
-                    url: $(element).data('href'),
-                    type: 'DELETE',
-                    data: { bulkIds: selectedValues },
-                    success: function (result) {
-                        alert('OK');
-                    }
-                });
-            }
-        })
-    },
+        //     $('.card-body').append(rendered);
 
-    restoreSeletedModels(element) {
-        Swal.fire({
-            title: $(element).data('confirm') ?? 'O RLY ?',
-            showDenyButton: true,
-            showCancelButton: false,
-            confirmButtonText: $(element).data('confirm-text') ?? 'TAK',
-            denyButtonText: $(element).data('cancel-text') ?? 'NIE'
-        }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-                let selectedValues = $.map($('input:checkbox.rowSelectBox:checked'), (item) => $(item).val());
+        //     initAfterAjax();
+        // },
 
-                $.ajax({
-                    url: $(element).data('href'),
-                    type: 'DELETE',
-                    data: { bulkIds: selectedValues },
-                    success: function (result) {
-                        alert('OK');
-                    }
-                });
-            }
-        })
-    },
-    
+        // deleteItemRow(event) {
+        //     $(event.target).closest('.row').remove();
+        // },
 
-    // addItemRow(element) {
-    //     let template = document.getElementById('container-item-row-tmpl').innerHTML;
-    //     let rendered = Mustache.render(template, {
-    //         nextIndex: parseInt($('input[name^=index]:last').val())+1
-    //     });
-
-    //     $('.card-body').append(rendered);
-
-    //     initAfterAjax();
-    // },
-
-    // deleteItemRow(event) {
-    //     $(event.target).closest('.row').remove();
-    // },
-
-    // stornoDocument(element) {
-    //     Swal.fire({
-    //         title: $(element).data('confirm') ?? 'O RLY ?',
-    //         showDenyButton: true,
-    //         showCancelButton: false,
-    //         confirmButtonText: $(element).data('confirm-text') ?? 'TAK',
-    //         denyButtonText: $(element).data('cancel-text') ?? 'NIE'
-    //     }).then((result) => {
-    //         /* Read more about isConfirmed, isDenied below */
-    //         if (result.isConfirmed) {
-    //             window.location = $(element).attr('href');
-    //         }
-    //     })
-    // },
-
+        // stornoDocument(element) {
+        //     Swal.fire({
+        //         title: $(element).data('confirm') ?? 'O RLY ?',
+        //         showDenyButton: true,
+        //         showCancelButton: false,
+        //         confirmButtonText: $(element).data('confirm-text') ?? 'TAK',
+        //         denyButtonText: $(element).data('cancel-text') ?? 'NIE'
+        //     }).then((result) => {
+        //         /* Read more about isConfirmed, isDenied below */
+        //         if (result.isConfirmed) {
+        //             window.location = $(element).attr('href');
+        //         }
+        //     })
+        // },
+    }
 })

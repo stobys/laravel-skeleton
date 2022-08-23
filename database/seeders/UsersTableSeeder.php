@@ -22,6 +22,7 @@ class UsersTableSeeder extends Seeder
         $users = [
             'batch' => [
                     'username'      => 'batch',
+                    'avatar'        => 'batch.jpg',
                     'password'      => '!',
 
                     'email'         => 'batch@local.app',
@@ -33,6 +34,7 @@ class UsersTableSeeder extends Seeder
                 ],
             'supervisor' => [
                     'username'      => 'supervisor',
+                    'avatar'        => 'supervisor.jpg',
                     'password'      => 'Password', // $2y$10$tySIrWuYcOjZmQQ6WOERu.wk1JOmOIiQ5TboOs0eijrTA/nJ1DDzG',
 
                     'email'         => 'supervisor@example.com',
@@ -42,13 +44,14 @@ class UsersTableSeeder extends Seeder
                     'created_at'    => now() -> subHour(),
                     'updated_at'    => now() -> subHour(),
                 ],
-            'user' => [
-                'username'      => 'user',
+            'atobyss' => [
+                'username'      => 'atobyss',
+                'avatar'        => 'atobyss.jpg',
                 'password'      => 'Password', // $2y$10$tySIrWuYcOjZmQQ6WOERu.wk1JOmOIiQ5TboOs0eijrTA/nJ1DDzG',
 
-                'email'         => 'user@example.com',
-                'family_name'   => 'Simple',
-                'given_name'    => 'User',
+                'email'         => 'slawomir.tobys@adient.com',
+                'family_name'   => 'Tobys',
+                'given_name'    => 'Sławomir',
 
                 'created_at'    => now(),
                 'updated_at'    => now(),
@@ -62,6 +65,6 @@ class UsersTableSeeder extends Seeder
         $supervisor = User::create($users['supervisor']);
         $supervisor -> assignRole('supervisor');
 
-        User::create($users['user'] + ['id' => 11]);
+        User::create($users['atobyss'] + ['id' => 11]);
     }
 }

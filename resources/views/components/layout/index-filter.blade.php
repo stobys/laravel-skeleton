@@ -12,7 +12,7 @@
                     <div class="input-group">
                         <div class="input-group-prepend {{ $advanced ? 'clickable' : '' }}"
                             @if( $advanced )
-                                data-js-action="toggleFilterContent"
+                                @click="toggleFilterContent"
                             @endif
                             data-filter-show-icon="fa-chevron-down"
                             data-filter-hide-icon="fa-chevron-up"
@@ -34,13 +34,13 @@
                             value="{{ $query }}">
         
                         <span class="input-group-append">
-                            <button type="button" class="btn btn-default btn-lg" data-js-action="clearFilterForm">
+                            <button type="button" class="btn btn-default btn-lg" @click="clearFilterForm">
                                 <i class="fas fa-fw fa-broom"></i>
                             </button>
                         </span>
         
                         <span class="input-group-append">
-                            <button type="submit" class="btn btn-default btn-lg" data-js-action="submitFilterForm">
+                            <button type="submit" class="btn btn-default btn-lg" @click="submitFilterForm">
                                 <i class="fas fa-fw fa-search"></i>
                             </button>
                         </span>
@@ -56,10 +56,10 @@
                 <div class="card-footer text-right"
                     style="@unless( session()->get('filters.'. controllerName() .'.isFiltered', false) ) display:none @endunless"
                 >
-                    <button type="button" class="btn btn-secondary" data-js-action="clearFilterForm">
+                    <button type="button" class="btn btn-secondary" @click="clearFilterForm">
                         <i class="fas fa-eraser"></i> &nbsp; Wyczyść
                     </button>
-                    <button type="submit" class="btn btn-primary" data-js-action="submitFilterForm">
+                    <button type="submit" class="btn btn-primary" @click="submitFilterForm">
                         <i class="fas fa-search"></i> &nbsp; Filtruj
                     </button>
                 </div><!-- /.card-body -->

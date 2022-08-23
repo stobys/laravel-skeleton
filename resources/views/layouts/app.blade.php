@@ -9,9 +9,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
+    <x-layout.favicon />
     @vite()
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,800,800i,900,900i" rel="stylesheet">
-    <link href="{{ asset('favicon.png') }}" rel="icon" type="image/png">
 
     @yield('headerStyles')
     @yield('headerScripts')
@@ -68,71 +67,14 @@
         @includeIf('layouts._control-sidebar')
     </div>
 
-    {{--// JS Scripts //--}}
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/scripts.js') }}"></script>
-
     @yield('scripts')
 
-    <script type="text/javascript">
+    <script type="text/javascript" defer>
         var ctrlPressed = false;
 
             var appBaseUrl = '{{ URL::to('/') }}/';
             var appLang = '{{ Lang::locale() }}';
             var appCsrfToken = '{{ csrf_token() }}';
-
-            $(document)
-                    .ajaxStart(function () {
-                        vAPP.showLoader();
-                    })
-                    .ajaxStop(function () {
-                        vAPP.hideLoader();
-                    })
-                    .ajaxSuccess(function() {
-                        initAfterAjax();
-                    })
-                    .ajaxError(function(event, jqxhr, settings, thrownError){
-                        if ( jqxhr.status == 401 )
-                        {
-                            window.location = window.location;
-                        }
-                        else if ( jqxhr.status == 419 )
-                        { // -- token mismatch, reload page and try again
-                            vAPP.toastError('token mismatch, reload page and try again');
-                        }
-                        else if ( jqxhr.status == 422 )
-                        { // -- validation error
-                            console.log('AJAX reqest status : '+ jqxhr.status);
-
-                            var errors = JSON.parse(jqxhr.responseText);
-                            vAPP.toastError(errors.message);
-                        }
-                        else {
-                            console.log('AJAX reqest status : '+ jqxhr.status);
-                        }
-                    });
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $( document ).ready(function() {
-                // initVue();
-                initAfterAjax();
-
-                @yield('readyScripts')
-            })
-            .keydown(function(event){
-                if(event.which=="17")
-                {
-                    ctrlPressed = true;
-                }
-            })
-            .keyup(function(){
-                ctrlPressed = false;
-            });
 
             // window.translations = {!! Cache::get('translations') !!};
 
@@ -140,7 +82,7 @@
     </script>
 
     <div id="loading-wrapper" style="display:none;">
-        <img id="loading-image" src="{{  asset('img/ajax-loader2.gif') }}" alt="Loading..." />
+        <img id="loading-image" src="{{  asset('img/ajax-loader.gif') }}" alt="Loading..." />
     </div>
 
     <div id="myModal" class="modal fade" tabindex="-1" role="dialog">

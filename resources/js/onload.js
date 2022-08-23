@@ -1,43 +1,3 @@
-// -- create a new config object
-var config = (function () {
-	var configObj = {};
-
-	// -- non writable properties
-	Object.defineProperty(configObj, 'debug', { value: false });
-
-	// -- writable properties
-	Object.defineProperty(configObj, 'baseUrl', {
-		value: null,
-		writable: true,
-	});
-
-	Object.defineProperty(configObj, 'lang', {
-		value: 'pl',
-		writable: true,
-	});
-
-	Object.defineProperty(configObj, 'csrfToken', {
-		value: null,
-		writable: true,
-
-		// get() {
-		//     console.log('get!');
-		//     return ;
-		// },
-
-		// set(value) {
-		//     temperature = value;
-		//     archive.push({ val: temperature });
-		// }
-	});
-
-	configObj.dummy = function () {
-		return 'dummy data';
-	};
-
-	return configObj;
-}());
-
 delay(5000).then( () => {
 	document.querySelectorAll('div.alert:not(.alert-danger)').forEach(element => slideUp(element, slideDuration));
 	delay(slideDuration+100).then( () => {
@@ -46,10 +6,7 @@ delay(5000).then( () => {
 });
 
 function initAfterAjax() {
-	logFunctionCall();
-
     initLaravel();
-	initJStriggers();
 	initSelectAllItems();
 	initSelect2();
 	initTooltips();
@@ -82,39 +39,6 @@ function preventTableCellsFromBeingSelectedWithCtrlClick()
             event.preventDefault();
         }
     });
-}
-
-function initJStriggers() {
-    logFunctionCall();
-
-	$('[data-js-action]').each(function(index, item){
-		var action = $(item).data('js-action');
-
-		switch( $(item).data('js-trigger') ) {
-			default:
-			case 'click':
-				$(item).unbind('click').click(function(event){
-                    if ( $(item).is('[data-confirm]') ) {
-                        if ( confirm($(item).data('confirm')) ) {
-                            callback.call(action, item, event);
-                        }
-						else {
-                        	return false;
-                        }
-                    }
-                    else {
-                        callback.call(action, item, event);
-                    }
-				});
-			break;
-
-			case 'change':
-				$(item).unbind('change').change(function(event){
-					callback.call(action, item, event);
-				});
-			break;
-		}
-	});
 }
 
 //function initInputMasks() {
@@ -442,10 +366,6 @@ function initLaravel() {
 	})();
 }
 
-// function submitFilter(element, event) {
-// 	$(element).closest('form').submit();
-// }
-
 function initToggleCardWidgetOnDblClick()
 {
     $('[data-card-widget=collapse]').closest('.card-header')
@@ -533,104 +453,6 @@ function initSelectAllItems()
 
 }
 
-function initContactsFilters() {
-	logFunctionCall();
-
-	// -- filtrowanie po imieniu, nazwisku, nuemrach i mailu
-	$('#contacts-filter-input').keyup(function(event){
-
-		var searchFor = $(this).val().toLowerCase();
-		if(event.keyCode == 27) // escape pressed
-		{
-			var searchFor = '';
-			$(this).val('');
-		}
-
-		$('#contacts-list tr')
-			.hide()
-			.filter( function(){
-
-				var rowData = $(this).data('filterable').toLowerCase();
-
-				if ( rowData.indexOf(searchFor) != -1 ) {
-					return this;
-				}
-			})
-			.show();
-
-			// $('#filter-count').html( $('#tanz-contacts-list tr:visible').length );
-		return false;
-	});
-}
-
-function initLinksFilters() {
-	logFunctionCall();
-
-	$('#links-filter-input').keyup(function(event){
-
-		var searchFor = $(this).val().toLowerCase();
-		if(event.keyCode == 27) // escape pressed
-		{
-			var searchFor = '';
-			$(this).val('');
-		}
-
-		$('#links-list dd, #links-list dt')
-			.hide()
-			.filter( function(){
-
-				var rowData = $(this).data('filterable').toLowerCase();
-
-				if ( rowData.indexOf(searchFor) != -1 ) {
-					return this;
-				}
-			})
-			.show();
-
-		return false;
-	});
-}
-
-function wsListenToEvent()
-{
-	var fadeTime = 300;
-	window.Echo.channel('kanban')
-		.listen('KanbanOrder', (e) => {
-			console.log('KanbanOrder : webSocket message received');
-
-			$('#quantity_'+ e.material_id).text(e.quantity)
-				.fadeIn(fadeTime).fadeOut(fadeTime)
-				.fadeIn(fadeTime).fadeOut(fadeTime)
-				.fadeIn(fadeTime).fadeOut(fadeTime)
-				.fadeIn(fadeTime);
-
-			$('#quantity_'+ e.material_id).closest('tr')
-				.fadeIn(fadeTime).fadeOut(fadeTime)
-				.fadeIn(fadeTime).fadeOut(fadeTime)
-				.fadeIn(fadeTime).fadeOut(fadeTime)
-				.fadeIn(fadeTime);
-
-		});
-
-	window.Echo.channel('kanban')
-		.listen('KanbanShipment', (e) => {
-			console.log('KanbanShipment : webSocket message received');
-
-			$('#quantity_'+ e.material_id).text(e.quantity)
-				.fadeIn(fadeTime).fadeOut(fadeTime)
-				.fadeIn(fadeTime).fadeOut(fadeTime)
-				.fadeIn(fadeTime).fadeOut(fadeTime)
-				.fadeIn(fadeTime);
-
-			$('#quantity_'+ e.material_id).closest('tr')
-				.fadeIn(fadeTime).fadeOut(fadeTime)
-				.fadeIn(fadeTime).fadeOut(fadeTime)
-				.fadeIn(fadeTime).fadeOut(fadeTime)
-				.fadeIn(fadeTime);
-
-		});
-}
-
 function initFormsValidation()
 {
 	logFunctionCall();
@@ -644,16 +466,6 @@ function initFormsValidation()
 			return false;
 		}
 	});
-}
-
-function initRowActionButtons() {
-	$('.table tbody tr')
-		.mouseenter(function () {
-	        $(this).find('.row-actions').css({display: 'flex'});
-	    })
-	    .mouseleave(function() {
-	        $(this).find('.row-actions').hide();
-	    });
 }
 
 // function initFileInputs()

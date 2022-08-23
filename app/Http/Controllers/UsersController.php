@@ -167,27 +167,24 @@ class UsersController extends Controller
 
     public function avatar(User $user)
     {
+        $avatars = Storage::disk('avatars');
         $file = $user->avatar ?? 'default.jpg';
 
-        if ( $user->isCoreUser() )
-        {
-            $file = 'core.jpg';
-        }
-
         // -- Check if the file exist
-        if ( Storage::disk('avatars')->missing($file) ) {
+        if ($avatars->missing($file)) {
             $file = 'default.jpg';
         }
 
         $headers = [
-            'Content-Type' => Storage::disk('avatars')->mimeType($file),
-            'Content-Length' => Storage::disk('avatars')->size($file),
-            'Content-Disposition' => 'inline; filename="' . basename($file) . '"',
-            'Pragma' => 'public',
-            'Etag' => md5(Storage::disk('avatars')->lastModified($file) . basename($file)),
+            // 'Content-Disposition'   => 'inline; filename="' . basename($file) . '"',
+            'Content-Disposition'   => 'inline',
+            'Content-Length'        => $avatars->size($file),
+            'Content-Type'          => $avatars->mimeType($file),
+            'Pragma'                => 'public',
+            'Etag'                  => md5($avatars->lastModified($file) . basename($file)),
         ];
 
-        return response()->make(Storage::disk('avatars')->get($file), 200, $headers);
+        return response()->file($avatars->path($file), $headers);
     }
 
     public function badge(User $user)

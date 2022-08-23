@@ -1,21 +1,65 @@
-export default () => ({
-    init() {
-        console.log('Initialize Alpine!');
+const alpineCommonObj = {
+
+    clearInputGroupField(event) {
+        $(event.target).closest('.input-group').find(':input')
+            .not(':button, :submit, :reset, :hidden')
+            .val('')
+            .removeAttr('checked')
+            .removeAttr('selected');
     },
 
-    addItemRow(element) {
-        let template = document.getElementById('container-item-row-tmpl').innerHTML;
-        let rendered = Mustache.render(template, {
-            nextIndex: parseInt($('input[name^=index]:last').val())+1
-        });
-
-        $('.card-body').append(rendered);
-
-        initAfterAjax();
+    clearFileInput(event) {
+        $(event.target).closest('div').find(':file[data-toggle=filestyle]').filestyle('clear');
     },
 
-    deleteItemRow(event) {
-        $(event.target).closest('.row').remove();
+    clearFilterForm(event) {
+        $(event.target).closest('form').find(':input')
+            .not(':button, :submit, :reset, :hidden')
+            .val('')
+            .removeAttr('checked')
+            .removeAttr('selected');
+
+        $(event.target).closest('form').submit();
+    },
+
+    copyToClipboard(element) {
+        // -- Get the text field
+        if (typeof element == 'string') {
+            element = document.getElementById(element);
+        }
+
+        // -- Select the text field
+        element.select();
+        element.setSelectionRange(0, 99999); /* For mobile devices */
+
+        // -- Alert the copied text
+        if (element.value == '') {
+            return null;
+        }
+        else {
+            // -- Copy the text inside the text field
+            try {
+                navigator.clipboard.writeText(element.value);
+            }
+            catch (error) {
+                document.execCommand('copy');
+            }
+
+            return element.value;
+        }
+    },
+
+    inputGroupCopyToClipboard(item, event) {
+        let element = $(item).closest('.input-group').find(':input')
+            .not(':button, :submit, :reset, :hidden');
+    
+        // console.log(element);
+        if (element.length) {
+            let copied = copyToClipboard(element.get(0));
+            if (copied) {
+                toastr.info('Skopiowano do schowka : ' + copied);
+            }
+        }
     },
 
     setSortOrder(event) {
@@ -32,19 +76,36 @@ export default () => ({
         window.location = url;
     },
 
-    // stornoDocument(element) {
-    //     Swal.fire({
-    //         title: $(element).data('confirm') ?? 'O RLY ?',
-    //         showDenyButton: true,
-    //         showCancelButton: false,
-    //         confirmButtonText: $(element).data('confirm-text') ?? 'TAK',
-    //         denyButtonText: $(element).data('cancel-text') ?? 'NIE'
-    //     }).then((result) => {
-    //         /* Read more about isConfirmed, isDenied below */
-    //         if (result.isConfirmed) {
-    //             window.location = $(element).attr('href');
-    //         }
-    //     })
-    // },
+    submitFilterForm(event) {
+        $(event.target).closest('form').find('button:submit').click();
+    },
 
-})
+    toggleFilterContent(event) {
+        let filterShowIconClass = $(event.target).data('filter-show-icon');
+        let filterHideIconClass = $(event.target).data('filter-hide-icon');
+
+        if ($(event.target).closest('.card').find('.card-body').is(':visible')) {
+            $(event.target).closest('.card').find('.card-body').hide();
+            $(event.target).closest('.card').find('.card-footer').hide();
+
+            $(event.target).closest('.card').find('.toggle-icon')
+                .removeClass(filterShowIconClass)
+                .removeClass(filterHideIconClass)
+                .addClass(filterShowIconClass);
+        }
+        else {
+            $(event.target).closest('.card').find('.card-body').show();
+            $(event.target).closest('.card').find('.card-footer').show();
+
+            $(event.target).closest('.card').find('.toggle-icon')
+            .removeClass(filterHideIconClass)
+            .removeClass(filterShowIconClass)
+            .addClass(filterHideIconClass);
+        }
+    },
+
+
+
+}
+
+export default alpineCommonObj

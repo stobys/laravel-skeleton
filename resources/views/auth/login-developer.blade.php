@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-center align-items-center h-100 mt-4">
-    <div class="card card-danger login-card">
+    <div class="card card-danger login-card w-25">
         <div class="card-header">
             <h3 class="card-title">Developer Login Form</h3>
         </div>

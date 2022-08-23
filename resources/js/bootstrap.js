@@ -6,6 +6,9 @@ window._ = _;
 import jQuery from 'jquery';
 window.$ = window.jQuery = jQuery;
 
+// -- Bootstrap
+import 'bootstrap';
+
 // -- SweetAlert2
 import swal from 'sweetalert2';
 window.Swal = swal;
@@ -18,6 +21,7 @@ window.toastr = toastr;
 import mustache from 'mustache';
 window.Mustache = mustache;
 
+
 // window.Popper = require('popper.js').default;
 // import popper from 'popper.js';
 // window.Popper = popper;
@@ -27,6 +31,8 @@ import axios from 'axios';
 window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+import '/resources/js/prototypes.js';
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

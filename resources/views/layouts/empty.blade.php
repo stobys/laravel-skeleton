@@ -9,8 +9,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
         
-    <link href="{{ asset('favicon.png') }}" rel="icon" type="image/png">
-
+    <x-layout.favicon />
     @vite()
     
     @yield('headerStyles')
@@ -19,7 +18,6 @@
 
 <body>
     @yield('content')
-    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 
 </html>

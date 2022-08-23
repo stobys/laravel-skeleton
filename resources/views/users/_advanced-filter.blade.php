@@ -7,7 +7,7 @@
                 -> attribute('form', 'filterForm')
                 -> class('form-control')
                 }}
-                <div class="input-group-append clickable" data-js-action="clearInputGroupField">
+                <div class="input-group-append clickable" @click="clearInputGroupField">
                     <span class="input-group-text">
                         <x-icon icon="times" />
                     </span>
@@ -23,7 +23,7 @@
                 -> attribute('form', 'filterForm')
                 -> class('form-control')
                 }}
-                <div class="input-group-append clickable" data-js-action="clearInputGroupField">
+                <div class="input-group-append clickable" @click="clearInputGroupField">
                     <span class="input-group-text">
                         <x-icon icon="times" />
                     </span>
@@ -55,7 +55,7 @@
                 -> attribute('form', 'filterForm')
                 -> class('form-control')
                 }}
-                <div class="input-group-append clickable" data-js-action="clearInputGroupField">
+                <div class="input-group-append clickable" @click="clearInputGroupField">
                     <span class="input-group-text">
                         <x-icon icon="times" />
                     </span>
@@ -71,7 +71,7 @@
                 -> attribute('form', 'filterForm')
                 -> class('form-control')
                 }}
-                <div class="input-group-append clickable" data-js-action="clearInputGroupField">
+                <div class="input-group-append clickable" @click="clearInputGroupField">
                     <span class="input-group-text">
                         <x-icon icon="times" />
                     </span>

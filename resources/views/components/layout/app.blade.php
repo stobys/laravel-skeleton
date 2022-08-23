@@ -18,10 +18,9 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <!-- Styles -->
-    
+
+    <x-layout.favicon />
     @vite()
-    <link href="{{ asset('favicon.png') }}" rel="icon" type="image/png">
 
     @yield('headerStyles')
     @yield('headerScripts')
@@ -80,66 +79,13 @@
     <script type="text/javascript">
         var ctrlPressed = false;
 
-            var appBaseUrl = '{{ URL::to('/') }}/';
-            var appLang = '{{ Lang::locale() }}';
-            var appCsrfToken = '{{ csrf_token() }}';
+        var appBaseUrl = '{{ URL::to('/') }}/';
+        var appLang = '{{ Lang::locale() }}';
+        var appCsrfToken = '{{ csrf_token() }}';
 
-            $(document)
-                    .ajaxStart(function () {
-                        vAPP.showLoader();
-                    })
-                    .ajaxStop(function () {
-                        vAPP.hideLoader();
-                    })
-                    .ajaxSuccess(function() {
-                        initAfterAjax();
-                    })
-                    .ajaxError(function(event, jqxhr, settings, thrownError){
-                        if ( jqxhr.status == 401 )
-                        {
-                            window.location = window.location;
-                        }
-                        else if ( jqxhr.status == 419 )
-                        { // -- token mismatch, reload page and try again
-                            vAPP.toastError('token mismatch, reload page and try again');
-                        }
-                        else if ( jqxhr.status == 422 )
-                        { // -- validation error
-                            console.log('AJAX reqest status : '+ jqxhr.status);
+        // window.translations = {!! Cache::get('translations') !!};
 
-                            var errors = JSON.parse(jqxhr.responseText);
-                            vAPP.toastError(errors.message);
-                        }
-                        else {
-                            console.log('AJAX reqest status : '+ jqxhr.status);
-                        }
-                    });
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $( document ).ready(function() {
-                // initVue();
-                initAfterAjax();
-
-                @yield('readyScripts')
-            })
-            .keydown(function(event){
-                if(event.which=="17")
-                {
-                    ctrlPressed = true;
-                }
-            })
-            .keyup(function(){
-                ctrlPressed = false;
-            });
-
-            // window.translations = {!! Cache::get('translations') !!};
-
-            @yield('footerScripts')
+        @yield('footerScripts')
     </script>
 
     <div id="loading-wrapper" style="display:none;">
